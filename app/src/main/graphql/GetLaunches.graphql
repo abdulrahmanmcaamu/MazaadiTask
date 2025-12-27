@@ -1,0 +1,13 @@
+query GetLaunches($pageSize: Int, $after: String) {
+  launches(pageSize: $pageSize, after: $after) {
+    launches {
+      id
+      site
+      mission {
+        name
+      }
+    }
+    cursor
+    hasMore
+  }
+}

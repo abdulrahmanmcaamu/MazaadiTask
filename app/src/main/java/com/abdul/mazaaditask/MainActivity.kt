@@ -6,41 +6,39 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.abdul.mazaaditask.presentation.navigation.NavGraph
 import com.abdul.mazaaditask.ui.theme.MazaadiTaskTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ * Main Activity - Entry point of the application
+ * 
+ * Responsibilities:
+ * - Sets up Compose UI
+ * - Initializes Navigation
+ * - Applies Material 3 theme
+ * 
+ * @AndroidEntryPoint enables Hilt dependency injection
+ */
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // Apply Material 3 theme
             MazaadiTaskTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    // Initialize navigation controller
+                    val navController = rememberNavController()
+                    // Set up navigation graph
+                    NavGraph(navController = navController)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MazaadiTaskTheme {
-        Greeting("Android")
     }
 }

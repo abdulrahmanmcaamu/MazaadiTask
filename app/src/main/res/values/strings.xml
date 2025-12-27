@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Mazaadi Task</string>
+    <string name="launches_title">Launches</string>
+    <string name="launch_detail_title">Launch Detail (id: %1$s)</string>
+    <string name="back">Back</string>
+    <string name="rocket">Rocket</string>
+    <string name="mission">Mission:</string>
+    <string name="site">Site:</string>
+    <string name="name">NAME: %1$s</string>
+    <string name="type">TYPE: %1$s</string>
+    <string name="id">ID: %1$s</string>
+    <string name="no_launches">No launches available</string>
+    <string name="error">Error</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="retry">Retry</string>
+    <string name="no_patch">No Patch</string>
 </resources>
