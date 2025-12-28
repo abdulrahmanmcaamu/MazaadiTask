@@ -6,61 +6,53 @@ import com.abdul.mazaaditask.domain.model.LaunchDetail
 import com.abdul.mazaaditask.domain.repository.LaunchRepository
 import javax.inject.Inject
 
-/**
- * Repository implementation following Clean Architecture
- * 
- * Responsibilities:
- * - Fetches data from remote data source (GraphQL API)
- * - Maps API models to domain models
- * - Handles data transformation and null safety
- */
 class LaunchRepositoryImpl @Inject constructor(
     private val remoteDataSource: LaunchRemoteDataSource
 ) : LaunchRepository {
-    
-    /**
-     * Gets paginated list of launches
-     * Maps GraphQL response to domain model
-     */
+
     override suspend fun getLaunches(limit: Int, offset: Int): Result<List<Launch>> {
-        return remoteDataSource.getLaunches(limit, offset).mapCatching { graphQLData ->
-            // Transform GraphQL response to domain models
-            graphQLData.launches.mapNotNull { graphQLLaunch ->
-                // Skip null launches and map to domain model
-                graphQLLaunch?.let { launch ->
+
+        return remoteDataSource.getLaunches(limit, offset).mapCatching { data ->
+
+            // 1) handle null root safely
+            val launchesList = data
+                ?.launches
+                ?.launches
+                .orEmpty()
+
+            // 2) always RETURN a list -> important part
+            launchesList.mapNotNull { launch ->
+
+                launch?.let {
                     Launch(
-                        id = launch.id ?: "",
-                        missionName = launch.mission?.name ?: "",
-                        rocketName = launch.rocket?.name ?: "",
-                        rocketType = launch.rocket?.type ?: "",
-                        rocketId = launch.rocket?.id ?: "",
-                        site = launch.site ?: ""
+                        id = it.id ?: "",
+                        missionName = it.mission?.name ?: "",
+                        rocketName = it.rocket?.name ?: "",
+                        rocketType = it.rocket?.type ?: "",
+                        rocketId = it.rocket?.id ?: "",
+                        site = it.site ?: ""
                     )
                 }
             }
         }
     }
-    
-    /**
-     * Gets detailed information about a specific launch
-     * Throws exception if launch not found
-     */
+
     override suspend fun getLaunchDetail(id: String): Result<LaunchDetail> {
-        return remoteDataSource.getLaunchDetail(id).mapCatching { graphQLData ->
-            val graphQLLaunch = graphQLData.launch
-                ?: throw Exception("Launch with id $id not found")
-            
-            // Map GraphQL model to domain model
+
+        return remoteDataSource.getLaunchDetail(id).mapCatching { data ->
+
+            val launch = data?.launch
+                ?: throw Exception("Launch not found")
+
             LaunchDetail(
-                id = graphQLLaunch.id ?: "",
-                missionName = graphQLLaunch.mission?.name ?: "",
-                missionPatch = graphQLLaunch.mission?.missionPatch, // Can be null
-                rocketName = graphQLLaunch.rocket?.name ?: "",
-                rocketType = graphQLLaunch.rocket?.type ?: "",
-                rocketId = graphQLLaunch.rocket?.id ?: "",
-                site = graphQLLaunch.site ?: ""
+                id = launch.id ?: "",
+                missionName = launch.mission?.name ?: "",
+                missionPatch = launch.mission?.missionPatch,
+                rocketName = launch.rocket?.name ?: "",
+                rocketType = launch.rocket?.type ?: "",
+                rocketId = launch.rocket?.id ?: "",
+                site = launch.site ?: ""
             )
         }
     }
 }
-

@@ -6,6 +6,11 @@ query GetLaunches($pageSize: Int, $after: String) {
       mission {
         name
       }
+      rocket {
+              id
+              name
+              type
+            }
     }
     cursor
     hasMore

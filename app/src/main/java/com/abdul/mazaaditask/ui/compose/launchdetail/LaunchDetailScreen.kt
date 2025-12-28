@@ -28,6 +28,7 @@ import com.abdul.mazaaditask.presentation.launchdetail.mvi.LaunchDetailViewModel
  * - Mission name
  * - Launch site
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LaunchDetailScreen(
     launchId: String,
@@ -68,7 +69,7 @@ fun LaunchDetailScreen(
                 
                 state.error != null -> {
                     ErrorMessage(
-                        message = state.error,
+                        message = state.error!!,
                         onDismiss = { viewModel.processIntent(LaunchDetailIntent.ClearError) },
                         onRetry = { viewModel.processIntent(LaunchDetailIntent.LoadLaunchDetail(launchId)) },
                         modifier = Modifier.align(Alignment.Center)
@@ -77,7 +78,7 @@ fun LaunchDetailScreen(
                 
                 state.launchDetail != null -> {
                     LaunchDetailContent(
-                        launchDetail = state.launchDetail,
+                        launchDetail = state.launchDetail!!,
                         modifier = Modifier.fillMaxSize()
                     )
                 }

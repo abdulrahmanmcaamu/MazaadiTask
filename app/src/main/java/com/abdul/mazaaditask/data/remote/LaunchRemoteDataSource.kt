@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 /**
  * Remote data source for fetching launch data from GraphQL API
- * 
+ *
  * This layer is responsible for:
  * - Making GraphQL queries using Apollo Client
  * - Handling network errors
@@ -16,20 +16,20 @@ import javax.inject.Inject
 class LaunchRemoteDataSource @Inject constructor(
     private val apolloClient: ApolloClient
 ) {
-    
+
     /**
      * Fetches paginated list of launches from GraphQL API
      * @param limit Number of items to fetch
      * @param offset Starting position for pagination
      * @return Result containing GraphQL response data or error
      */
-    suspend fun getLaunches(limit: Int, offset: Int): Result<GetLaunchesQuery.Data> {
+    suspend fun getLaunches(limit: Int, offset: Int): Result<GetLaunchesQuery.Data?> {
         return try {
             // Execute GraphQL query with pagination parameters
             val response = apolloClient.query(
-                GetLaunchesQuery(limit = limit, offset = offset)
+                GetLaunchesQuery()
             ).execute()
-            
+
             // Check if data is present in response
             if (response.data != null) {
                 Result.success(response.data)
@@ -42,19 +42,21 @@ class LaunchRemoteDataSource @Inject constructor(
             Result.failure(e)
         }
     }
-    
+
     /**
      * Fetches detailed information about a specific launch
      * @param id Launch ID to fetch
      * @return Result containing launch detail data or error
      */
-    suspend fun getLaunchDetail(id: String): Result<GetLaunchDetailQuery.Data> {
+    suspend fun getLaunchDetail(id: String): Result<GetLaunchDetailQuery.Data?>
+    {
         return try {
             // Execute GraphQL query with launch ID
             val response = apolloClient.query(
                 GetLaunchDetailQuery(id = id)
+
             ).execute()
-            
+
             if (response.data != null) {
                 Result.success(response.data)
             } else {

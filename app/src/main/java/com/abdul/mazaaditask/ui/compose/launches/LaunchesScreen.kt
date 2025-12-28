@@ -83,7 +83,7 @@ fun LaunchesScreen(
             
             state.error != null -> {
                 ErrorMessage(
-                    message = state.error,
+                    message = state.error!!,
                     onDismiss = { viewModel.processIntent(LaunchesIntent.ClearError) },
                     onRetry = { viewModel.processIntent(LaunchesIntent.LoadLaunches) }
                 )
@@ -132,6 +132,7 @@ fun LaunchesScreen(
  * Individual launch item in the list
  * Displays rocket name and mission name
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LaunchItem(
     launch: com.abdul.mazaaditask.domain.model.Launch,
